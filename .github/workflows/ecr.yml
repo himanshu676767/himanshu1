@@ -1,0 +1,27 @@
+name: Push to ECR
+
+on:
+  push:
+    branches:
+      - master  # change this to the branch you want to trigger the action on
+
+jobs:
+  push_to_ecr:
+    name: Push Docker image to ECR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build the Docker image
+        run: |
+          docker build -t nginx:latest .
+          docker tag nginx:latest ${{ steps.login-ecr.outputs.registry }}:latest
+
+      - name: Push image to ECR
+        run: sudo docker push ${{ steps.login-ecr.outputs.registry }}:latest
