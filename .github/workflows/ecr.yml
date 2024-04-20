@@ -20,10 +20,10 @@ jobs:
         with:
           region: us-east-1
 
-      - name: Build the Docker image
+      - name: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 654654507153.dkr.ecr.us-east-1.amazonaws.com
         run: |
-          docker build -t nginx:latest .
-          docker tag nginx:latest ${{ steps.login-ecr.outputs.registry }}:latest
+          docker build -t kamal .
+          docker tag kamal:latest 654654507153.dkr.ecr.us-east-1.amazonaws.com/kamal:latest
 
       - name: Push image to ECR
-        run: docker push ${{ steps.login-ecr.outputs.registry }}:latest
+        run: docker push 654654507153.dkr.ecr.us-east-1.amazonaws.com/kamal:latest
